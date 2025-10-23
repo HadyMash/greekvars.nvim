@@ -68,13 +68,12 @@ local function apply_conceal_to_buffer(bufnr)
             hl_group = "@" .. captures[#captures].capture
           end
           
-          -- Use virtual text with overlay position to replace text visually
-          -- while preserving the highlight group
+          -- Apply extmark with conceal that preserves treesitter highlighting
+          -- The hl_group parameter applies to the concealed character
           vim.api.nvim_buf_set_extmark(bufnr, ns, row, col_start, {
             end_col = match_end,
-            conceal = "",
-            virt_text = {{sym, hl_group or "Normal"}},
-            virt_text_pos = "overlay",
+            conceal = sym,
+            hl_group = hl_group or "Normal",
           })
         end
         
