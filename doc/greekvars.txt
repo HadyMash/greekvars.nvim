@@ -1,0 +1,123 @@
+*greekvars.txt*  Greek variable conceal plugin for Neovim
+
+Author:  HadyMash
+License: MIT
+
+INTRODUCTION                                    *greekvars* *greekvars.nvim*
+
+This plugin automatically replaces Greek letter names (like `alpha`, `beta`,
+`gamma`) with their corresponding Unicode symbols (α, β, γ) using Vim's
+conceal feature.
+
+REQUIREMENTS                                    *greekvars-requirements*
+
+- Neovim 0.5.0 or higher
+- Terminal with Unicode support
+
+INSTALLATION                                    *greekvars-installation*
+
+Using lazy.nvim: >lua
+    {
+      "HadyMash/greekvars.nvim",
+      config = function()
+        require("greekvars").setup()
+      end,
+    }
+<
+
+Using packer.nvim: >lua
+    use {
+      "HadyMash/greekvars.nvim",
+      config = function()
+        require("greekvars").setup()
+      end,
+    }
+<
+
+SETUP                                           *greekvars-setup*
+
+                                                *greekvars.setup()*
+greekvars.setup({opts})
+    Configure and initialize the plugin.
+
+    Parameters: ~
+        {opts} (table|nil) Optional configuration table with the following keys:
+            • {conceallevel} (number) Vim's conceallevel setting (0-3)
+              Default: 2
+            • {concealcursor} (string) Vim's concealcursor setting
+              Default: "nc"
+            • {filetypes} (table) List of file types where Greek vars are concealed
+              Default: {"lua", "python", "javascript", "typescript", "c", "cpp"}
+
+    Example: >lua
+        require("greekvars").setup({
+          conceallevel = 2,
+          concealcursor = "nc",
+          filetypes = { "lua", "python", "javascript" },
+        })
+<
+
+COMMANDS                                        *greekvars-commands*
+
+                                                *:GreekVarsToggle*
+:GreekVarsToggle
+    Toggle Greek variable conceal on/off. When disabled, the conceallevel is
+    set to 0. When enabled, it's set back to the configured value.
+
+FUNCTIONS                                       *greekvars-functions*
+
+                                                *greekvars.toggle()*
+greekvars.toggle()
+    Programmatically toggle Greek variable conceal on/off.
+
+    Example: >lua
+        require("greekvars").toggle()
+<
+
+GREEK LETTERS                                   *greekvars-letters*
+
+The following Greek letter names are supported:
+
+    alpha       →  α
+    beta        →  β
+    gamma       →  γ
+    delta       →  δ
+    epsilon     →  ε
+    zeta        →  ζ
+    eta         →  η
+    theta       →  θ
+    iota        →  ι
+    kappa       →  κ
+    lambda      →  λ
+    mu          →  μ
+    nu          →  ν
+    xi          →  ξ
+    omicron     →  ο
+    pi          →  π
+    rho         →  ρ
+    sigma       →  σ
+    tau         →  τ
+    upsilon     →  υ
+    phi         →  φ
+    chi         →  χ
+    psi         →  ψ
+    omega       →  ω
+
+BEHAVIOR                                        *greekvars-behavior*
+
+The plugin uses Vim's built-in conceal feature to replace text in the buffer
+display without modifying the actual file content.
+
+- Only complete words matching Greek letter names are concealed
+- The conceal is temporarily disabled during search operations (/ and ?)
+  to ensure search highlights work properly
+- The conceal respects word boundaries, so `alphabet` will not be concealed
+
+TIPS                                            *greekvars-tips*
+
+- Use |:set conceallevel?| to check the current conceal level
+- Use |:set concealcursor?| to check which modes hide concealed text
+- Set `conceallevel=0` in your config to disable conceal permanently
+- Press |gUU| to toggle case temporarily if you need to see the original text
+
+vim:tw=78:ts=8:ft=help:norl:
