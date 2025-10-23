@@ -108,6 +108,8 @@ The following Greek letter names are supported:
 
 The plugin uses Vim's built-in conceal feature to replace text in the buffer display without modifying the actual file content. When you search for text, conceal is temporarily disabled so that search highlights work properly.
 
+The concealed Greek characters preserve the syntax highlighting of the original text, whether it comes from Vim's traditional syntax highlighting, TreeSitter, or LSP semantic tokens. This means that function parameters, variables, keywords, and other highlighted text will maintain their colors even when concealed.
+
 ## License
 
 MIT

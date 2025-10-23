@@ -112,6 +112,10 @@ display without modifying the actual file content.
 - The conceal is temporarily disabled during search operations (/ and ?)
   to ensure search highlights work properly
 - The conceal respects word boundaries, so `alphabet` will not be concealed
+- Concealed Greek characters preserve the syntax highlighting of the original
+  text, whether from Vim's traditional syntax, TreeSitter, or LSP semantic
+  tokens. This means highlighted function parameters, variables, keywords, etc.
+  maintain their colors when concealed
 
 TIPS                                            *greekvars-tips*
 
