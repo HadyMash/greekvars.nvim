@@ -43,17 +43,14 @@ local function setup_greek_conceal()
   for name, sym in pairs(M.greek_vars) do
     local pattern = [[\<]] .. name .. [[\>]]
     local cmd = string.format(
-      -- Add "contains=@NoSpell" so it doesn't break search or spell
-      -- and use "concealends" so highlighting still applies to the whole word
-      "syntax match GreekVar_%s /%s/ conceal concealends cchar=%s contains=@NoSpell",
+      -- Use "contained" to allow the match to inherit syntax highlighting
+      -- from treesitter and LSP semantic tokens
+      "syntax match GreekVar_%s /%s/ conceal cchar=%s containedin=ALL",
       name,
       pattern,
       sym
     )
     vim.cmd(cmd)
-
-    -- Make sure the highlight group doesn't override Search highlight
-    vim.api.nvim_set_hl(0, "GreekVar_" .. name, { link = "Normal" })
   end
 end
 
