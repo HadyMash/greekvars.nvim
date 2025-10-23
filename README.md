@@ -17,6 +17,7 @@ A Neovim plugin that replaces Greek letter names with the corresponding Greek ch
 ```lua
 {
   "HadyMash/greekvars.nvim",
+  ft = { "lua", "python", "javascript", "typescript", "c", "cpp" },
   config = function()
     require("greekvars").setup()
   end,
@@ -28,6 +29,7 @@ A Neovim plugin that replaces Greek letter names with the corresponding Greek ch
 ```lua
 use {
   "HadyMash/greekvars.nvim",
+  ft = { "lua", "python", "javascript", "typescript", "c", "cpp" },
   config = function()
     require("greekvars").setup()
   end,
