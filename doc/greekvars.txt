@@ -48,12 +48,24 @@ greekvars.setup({opts})
               Default: "nc"
             • {filetypes} (table) List of file types where Greek vars are concealed
               Default: {"lua", "python", "javascript", "typescript", "c", "cpp"}
+            • {greek_vars} (table) Custom Greek variable mappings
+              Default: {} (uses default mappings)
+              Keys are the words to conceal, values are the replacement symbols.
+              Can be used to override existing mappings or add new custom symbols.
 
     Example: >lua
         require("greekvars").setup({
           conceallevel = 2,
           concealcursor = "nc",
           filetypes = { "lua", "python", "javascript" },
+          greek_vars = {
+            -- Override existing
+            alpha = "a",
+            beta = "b",
+            -- Add custom symbols
+            star = "★",
+            heart = "♥",
+          },
         })
 <
 
@@ -76,7 +88,7 @@ greekvars.toggle()
 
 GREEK LETTERS                                   *greekvars-letters*
 
-The following Greek letter names are supported:
+The following Greek letter names are supported by default:
 
     alpha       →  α
     beta        →  β
@@ -102,6 +114,36 @@ The following Greek letter names are supported:
     chi         →  χ
     psi         →  ψ
     omega       →  ω
+
+CUSTOMIZATION                                   *greekvars-customization*
+
+You can customize the Greek variable mappings using the `greek_vars` option
+in the setup function. This allows you to:
+
+- Override existing Greek letter mappings
+- Add new custom symbols for any word you want
+
+Example: >lua
+    require("greekvars").setup({
+      greek_vars = {
+        -- Override existing Greek letters
+        alpha = "a",
+        beta = "b",
+        
+        -- Add custom symbols
+        star = "★",
+        heart = "♥",
+        diamond = "♦",
+      },
+    })
+<
+
+In this example:
+- `alpha` will be concealed as "a" instead of "α"
+- `beta` will be concealed as "b" instead of "β"
+- All other default Greek letters will continue to use their default symbols
+- New words like `star`, `heart`, and `diamond` will be concealed with their
+  respective symbols
 
 BEHAVIOR                                        *greekvars-behavior*
 

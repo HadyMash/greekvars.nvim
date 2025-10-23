@@ -62,8 +62,38 @@ require("greekvars").setup({
     "c",
     "cpp",
   },
+  greek_vars = {},          -- Custom greek variable mappings (optional)
 })
 ```
+
+### Customizing Greek Variables
+
+You can customize the Greek variable mappings by providing a `greek_vars` table in the setup configuration. This allows you to:
+- Override existing mappings (e.g., change `alpha` to display as `"a"` instead of `"α"`)
+- Add new custom symbols (e.g., `mysymbol = "★"`)
+
+Example:
+
+```lua
+require("greekvars").setup({
+  greek_vars = {
+    -- Override existing Greek letters
+    alpha = "a",
+    beta = "b",
+    
+    -- Add custom symbols
+    star = "★",
+    heart = "♥",
+    diamond = "♦",
+  },
+})
+```
+
+In this example:
+- `alpha` will be concealed as `"a"` instead of `"α"`
+- `beta` will be concealed as `"b"` instead of `"β"`
+- All other default Greek letters (`gamma`, `delta`, etc.) will continue to use their default symbols
+- New custom words like `star`, `heart`, and `diamond` will be concealed with their respective symbols
 
 ## Usage
 
