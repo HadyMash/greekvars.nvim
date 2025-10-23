@@ -122,6 +122,11 @@ function M.setup(opts)
   -- Merge user config with defaults
   if opts then
     M.config = vim.tbl_deep_extend("force", M.config, opts)
+    
+    -- Merge user-provided greek_vars with defaults
+    if opts.greek_vars then
+      M.greek_vars = vim.tbl_deep_extend("force", M.greek_vars, opts.greek_vars)
+    end
   end
 
   -- Disable conceal while searching so highlights show
