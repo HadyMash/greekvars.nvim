@@ -43,9 +43,8 @@ local function setup_greek_conceal()
   for name, sym in pairs(M.greek_vars) do
     local pattern = [[\<]] .. name .. [[\>]]
     local cmd = string.format(
-      -- Use "containedin=ALL" to allow the match to inherit syntax highlighting
-      -- from treesitter and LSP semantic tokens
-      "syntax match GreekVar_%s /%s/ conceal cchar=%s containedin=ALL",
+      -- Use "transparent" to allow treesitter/LSP highlighting to show through
+      "syntax match GreekVar_%s /%s/ conceal cchar=%s transparent containedin=ALL",
       name,
       pattern,
       sym
