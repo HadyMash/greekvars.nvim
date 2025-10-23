@@ -79,7 +79,7 @@ function M.setup(opts)
   vim.api.nvim_create_autocmd({ "CmdlineEnter" }, {
     pattern = { "/", "?" },
     callback = function()
-      vim.opt_local.conceallevel = 0
+      vim.opt.conceallevel = 0
     end,
   })
 
