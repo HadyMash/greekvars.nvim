@@ -19,6 +19,7 @@ INSTALLATION                                    *greekvars-installation*
 Using lazy.nvim: >lua
     {
       "HadyMash/greekvars.nvim",
+      ft = { "lua", "python", "javascript", "typescript", "c", "cpp" },
       config = function()
         require("greekvars").setup()
       end,
@@ -28,6 +29,7 @@ Using lazy.nvim: >lua
 Using packer.nvim: >lua
     use {
       "HadyMash/greekvars.nvim",
+      ft = { "lua", "python", "javascript", "typescript", "c", "cpp" },
       config = function()
         require("greekvars").setup()
       end,
