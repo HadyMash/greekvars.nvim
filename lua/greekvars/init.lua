@@ -47,8 +47,6 @@ local function apply_conceal_to_buffer(bufnr)
   
   for lnum, line in ipairs(lines) do
     for name, sym in pairs(M.greek_vars) do
-      -- Match whole words only (word boundaries)
-      local pattern = "\\<" .. name .. "\\>"
       local col = 0
       while true do
         local match_start, match_end = string.find(line, name, col + 1, true)
@@ -59,10 +57,24 @@ local function apply_conceal_to_buffer(bufnr)
         local after_ok = match_end == #line or not string.match(string.sub(line, match_end + 1, match_end + 1), "[%w_]")
         
         if before_ok and after_ok then
-          -- Apply conceal extmark (lnum is 1-indexed, but nvim_buf_set_extmark uses 0-indexed)
-          vim.api.nvim_buf_set_extmark(bufnr, ns, lnum - 1, match_start - 1, {
+          -- Get treesitter highlight group at this position
+          local row, col_start = lnum - 1, match_start - 1
+          local hl_group = nil
+          
+          -- Try to get highlight from treesitter
+          local ok, captures = pcall(vim.treesitter.get_captures_at_pos, bufnr, row, col_start)
+          if ok and captures and #captures > 0 then
+            -- Get the first capture's highlight group
+            hl_group = "@" .. captures[1].capture
+          end
+          
+          -- Use virtual text with inline position and conceal to replace text
+          -- while preserving the highlight group
+          vim.api.nvim_buf_set_extmark(bufnr, ns, row, col_start, {
             end_col = match_end,
-            conceal = sym,
+            conceal = "",
+            virt_text = {{sym, hl_group or "Normal"}},
+            virt_text_pos = "inline",
           })
         end
         
