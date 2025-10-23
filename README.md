@@ -62,6 +62,8 @@ require("greekvars").setup({
     "c",
     "cpp",
   },
+  case_sensitive = true,    -- Whether matching is case sensitive
+  case_preference = "lower", -- When case_insensitive, prefer "lower" or "upper" case symbols
   greek_vars = {},          -- Custom greek variable mappings (optional)
 })
 ```
@@ -71,6 +73,7 @@ require("greekvars").setup({
 You can customize the Greek variable mappings by providing a `greek_vars` table in the setup configuration. This allows you to:
 - Override existing mappings (e.g., change `alpha` to display as `"a"` instead of `"α"`)
 - Add new custom symbols (e.g., `mysymbol = "★"`)
+- Remove default mappings (set them to `false` or `vim.NIL`)
 
 Example:
 
@@ -85,6 +88,10 @@ require("greekvars").setup({
     star = "★",
     heart = "♥",
     diamond = "♦",
+    
+    -- Remove defaults
+    gamma = false,      -- Remove gamma from conceal
+    DELTA = vim.NIL,    -- Remove DELTA from conceal
   },
 })
 ```
@@ -92,8 +99,69 @@ require("greekvars").setup({
 In this example:
 - `alpha` will be concealed as `"a"` instead of `"α"`
 - `beta` will be concealed as `"b"` instead of `"β"`
-- All other default Greek letters (`gamma`, `delta`, etc.) will continue to use their default symbols
+- `gamma` and `DELTA` will not be concealed at all
+- All other default Greek letters will continue to use their default symbols
 - New custom words like `star`, `heart`, and `diamond` will be concealed with their respective symbols
+
+### Case Sensitivity
+
+By default, the plugin uses case-sensitive matching. You can control this behavior:
+
+#### Case Sensitive (Default)
+
+```lua
+require("greekvars").setup({
+  case_sensitive = true,  -- Default
+})
+```
+
+With case-sensitive matching:
+- `alpha` matches only `alpha` → α
+- `ALPHA` matches only `ALPHA` → Α
+- `Alpha` is not concealed
+
+#### Case Insensitive
+
+```lua
+require("greekvars").setup({
+  case_sensitive = false,
+  case_preference = "lower",  -- or "upper"
+})
+```
+
+With case-insensitive matching:
+- `alpha`, `ALPHA`, `Alpha`, `aLpHa` all match and get concealed
+- `case_preference = "lower"` uses lowercase symbols (α) for all matches
+- `case_preference = "upper"` uses uppercase symbols (Α) for all matches
+
+### Removing All Defaults
+
+To start with an empty set and only use your custom symbols:
+
+```lua
+-- Get all default keys
+local default_keys = {
+  "alpha", "beta", "gamma", "delta", "epsilon", "zeta", "eta", "theta",
+  "iota", "kappa", "lambda", "mu", "nu", "xi", "omicron", "pi", "rho",
+  "sigma", "tau", "upsilon", "phi", "chi", "psi", "omega",
+  "ALPHA", "BETA", "GAMMA", "DELTA", "EPSILON", "ZETA", "ETA", "THETA",
+  "IOTA", "KAPPA", "LAMBDA", "MU", "NU", "XI", "OMICRON", "PI", "RHO",
+  "SIGMA", "TAU", "UPSILON", "PHI", "CHI", "PSI", "OMEGA",
+}
+
+local remove_defaults = {}
+for _, key in ipairs(default_keys) do
+  remove_defaults[key] = false
+end
+
+require("greekvars").setup({
+  greek_vars = vim.tbl_extend("force", remove_defaults, {
+    -- Now add only your custom symbols
+    star = "★",
+    heart = "♥",
+  }),
+})
+```
 
 ## Usage
 
@@ -105,34 +173,34 @@ Once installed and set up, the plugin will automatically conceal Greek letter na
 
 ### Supported Greek Letters
 
-The following Greek letter names are supported:
+The following Greek letter names are supported by default:
 
-| Name      | Symbol |
-|-----------|--------|
-| alpha     | α      |
-| beta      | β      |
-| gamma     | γ      |
-| delta     | δ      |
-| epsilon   | ε      |
-| zeta      | ζ      |
-| eta       | η      |
-| theta     | θ      |
-| iota      | ι      |
-| kappa     | κ      |
-| lambda    | λ      |
-| mu        | μ      |
-| nu        | ν      |
-| xi        | ξ      |
-| omicron   | ο      |
-| pi        | π      |
-| rho       | ρ      |
-| sigma     | σ      |
-| tau       | τ      |
-| upsilon   | υ      |
-| phi       | φ      |
-| chi       | χ      |
-| psi       | ψ      |
-| omega     | ω      |
+| Lowercase | Symbol | Uppercase | Symbol |
+|-----------|--------|-----------|--------|
+| alpha     | α      | ALPHA     | Α      |
+| beta      | β      | BETA      | Β      |
+| gamma     | γ      | GAMMA     | Γ      |
+| delta     | δ      | DELTA     | Δ      |
+| epsilon   | ε      | EPSILON   | Ε      |
+| zeta      | ζ      | ZETA      | Ζ      |
+| eta       | η      | ETA       | Η      |
+| theta     | θ      | THETA     | Θ      |
+| iota      | ι      | IOTA      | Ι      |
+| kappa     | κ      | KAPPA     | Κ      |
+| lambda    | λ      | LAMBDA    | Λ      |
+| mu        | μ      | MU        | Μ      |
+| nu        | ν      | NU        | Ν      |
+| xi        | ξ      | XI        | Ξ      |
+| omicron   | ο      | OMICRON   | Ο      |
+| pi        | π      | PI        | Π      |
+| rho       | ρ      | RHO       | Ρ      |
+| sigma     | σ      | SIGMA     | Σ      |
+| tau       | τ      | TAU       | Τ      |
+| upsilon   | υ      | UPSILON   | Υ      |
+| phi       | φ      | PHI       | Φ      |
+| chi       | χ      | CHI       | Χ      |
+| psi       | ψ      | PSI       | Ψ      |
+| omega     | ω      | OMEGA     | Ω      |
 
 ## How It Works
 

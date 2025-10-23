@@ -48,16 +48,23 @@ greekvars.setup({opts})
               Default: "nc"
             • {filetypes} (table) List of file types where Greek vars are concealed
               Default: {"lua", "python", "javascript", "typescript", "c", "cpp"}
+            • {case_sensitive} (boolean) Whether matching is case sensitive
+              Default: true
+            • {case_preference} (string) When case_insensitive, prefer "lower" or
+              "upper" case symbols. Default: "lower"
             • {greek_vars} (table) Custom Greek variable mappings
               Default: {} (uses default mappings)
               Keys are the words to conceal, values are the replacement symbols.
-              Can be used to override existing mappings or add new custom symbols.
+              Can be used to override existing mappings, add new custom symbols,
+              or remove defaults (set to false or vim.NIL).
 
     Example: >lua
         require("greekvars").setup({
           conceallevel = 2,
           concealcursor = "nc",
           filetypes = { "lua", "python", "javascript" },
+          case_sensitive = true,
+          case_preference = "lower",
           greek_vars = {
             -- Override existing
             alpha = "a",
@@ -65,6 +72,8 @@ greekvars.setup({opts})
             -- Add custom symbols
             star = "★",
             heart = "♥",
+            -- Remove defaults
+            gamma = false,
           },
         })
 <
@@ -90,30 +99,31 @@ GREEK LETTERS                                   *greekvars-letters*
 
 The following Greek letter names are supported by default:
 
-    alpha       →  α
-    beta        →  β
-    gamma       →  γ
-    delta       →  δ
-    epsilon     →  ε
-    zeta        →  ζ
-    eta         →  η
-    theta       →  θ
-    iota        →  ι
-    kappa       →  κ
-    lambda      →  λ
-    mu          →  μ
-    nu          →  ν
-    xi          →  ξ
-    omicron     →  ο
-    pi          →  π
-    rho         →  ρ
-    sigma       →  σ
-    tau         →  τ
-    upsilon     →  υ
-    phi         →  φ
-    chi         →  χ
-    psi         →  ψ
-    omega       →  ω
+    Lowercase   Uppercase
+    alpha   →  α    ALPHA   →  Α
+    beta    →  β    BETA    →  Β
+    gamma   →  γ    GAMMA   →  Γ
+    delta   →  δ    DELTA   →  Δ
+    epsilon →  ε    EPSILON →  Ε
+    zeta    →  ζ    ZETA    →  Ζ
+    eta     →  η    ETA     →  Η
+    theta   →  θ    THETA   →  Θ
+    iota    →  ι    IOTA    →  Ι
+    kappa   →  κ    KAPPA   →  Κ
+    lambda  →  λ    LAMBDA  →  Λ
+    mu      →  μ    MU      →  Μ
+    nu      →  ν    NU      →  Ν
+    xi      →  ξ    XI      →  Ξ
+    omicron →  ο    OMICRON →  Ο
+    pi      →  π    PI      →  Π
+    rho     →  ρ    RHO     →  Ρ
+    sigma   →  σ    SIGMA   →  Σ
+    tau     →  τ    TAU     →  Τ
+    upsilon →  υ    UPSILON →  Υ
+    phi     →  φ    PHI     →  Φ
+    chi     →  χ    CHI     →  Χ
+    psi     →  ψ    PSI     →  Ψ
+    omega   →  ω    OMEGA   →  Ω
 
 CUSTOMIZATION                                   *greekvars-customization*
 
@@ -122,6 +132,7 @@ in the setup function. This allows you to:
 
 - Override existing Greek letter mappings
 - Add new custom symbols for any word you want
+- Remove default mappings (set them to false or vim.NIL)
 
 Example: >lua
     require("greekvars").setup({
@@ -134,6 +145,10 @@ Example: >lua
         star = "★",
         heart = "♥",
         diamond = "♦",
+        
+        -- Remove defaults
+        gamma = false,
+        DELTA = vim.NIL,
       },
     })
 <
@@ -141,9 +156,38 @@ Example: >lua
 In this example:
 - `alpha` will be concealed as "a" instead of "α"
 - `beta` will be concealed as "b" instead of "β"
+- `gamma` and `DELTA` will not be concealed at all
 - All other default Greek letters will continue to use their default symbols
 - New words like `star`, `heart`, and `diamond` will be concealed with their
   respective symbols
+
+CASE SENSITIVITY                                *greekvars-case-sensitivity*
+
+By default, the plugin uses case-sensitive matching. You can control this
+behavior with the `case_sensitive` and `case_preference` options.
+
+Case Sensitive (Default): >lua
+    require("greekvars").setup({
+      case_sensitive = true,  -- Default
+    })
+<
+
+With case-sensitive matching:
+- `alpha` matches only `alpha` → α
+- `ALPHA` matches only `ALPHA` → Α
+- `Alpha` is not concealed
+
+Case Insensitive: >lua
+    require("greekvars").setup({
+      case_sensitive = false,
+      case_preference = "lower",  -- or "upper"
+    })
+<
+
+With case-insensitive matching:
+- `alpha`, `ALPHA`, `Alpha`, `aLpHa` all match and get concealed
+- `case_preference = "lower"` uses lowercase symbols (α) for all matches
+- `case_preference = "upper"` uses uppercase symbols (Α) for all matches
 
 BEHAVIOR                                        *greekvars-behavior*
 
