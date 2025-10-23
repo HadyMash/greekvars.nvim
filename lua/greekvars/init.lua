@@ -64,17 +64,17 @@ local function apply_conceal_to_buffer(bufnr)
           -- Try to get highlight from treesitter
           local ok, captures = pcall(vim.treesitter.get_captures_at_pos, bufnr, row, col_start)
           if ok and captures and #captures > 0 then
-            -- Get the first capture's highlight group
-            hl_group = "@" .. captures[1].capture
+            -- Get the last (most specific) capture's highlight group
+            hl_group = "@" .. captures[#captures].capture
           end
           
-          -- Use virtual text with inline position and conceal to replace text
+          -- Use virtual text with overlay position to replace text visually
           -- while preserving the highlight group
           vim.api.nvim_buf_set_extmark(bufnr, ns, row, col_start, {
             end_col = match_end,
             conceal = "",
             virt_text = {{sym, hl_group or "Normal"}},
-            virt_text_pos = "inline",
+            virt_text_pos = "overlay",
           })
         end
         
