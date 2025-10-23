@@ -87,7 +87,7 @@ function M.setup(opts)
   vim.api.nvim_create_autocmd({ "CmdlineLeave" }, {
     pattern = { "/", "?" },
     callback = function()
-      vim.opt_local.conceallevel = M.config.conceallevel
+      vim.opt.conceallevel = M.config.conceallevel
     end,
   })
 
