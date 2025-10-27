@@ -50,7 +50,7 @@ greekvars.setup({opts})
               Default: {"lua", "python", "javascript", "typescript", "c", "cpp"}
             • {case_sensitive} (boolean) Whether matching is case sensitive
               Default: true
-            • {case_preference} (string) When case_insensitive, prefer "lower" or
+            • {case_preference} (string) When case_sensitive is false, prefer "lower" or
               "upper" case symbols. Default: "lower"
             • {greek_vars} (table) Custom Greek variable mappings
               Default: {} (uses default mappings)
