@@ -60,7 +60,7 @@ M.config = {
   concealcursor = "nc",
   filetypes = { "lua", "python", "javascript", "typescript", "c", "cpp" },
   case_sensitive = true,    -- Whether matching is case sensitive
-  case_preference = "lower", -- When case_insensitive, prefer "lower" or "upper" case symbols
+  case_preference = "lower", -- When case_sensitive is false, prefer "lower" or "upper" case symbols
 }
 
 -- Namespace for extmarks
