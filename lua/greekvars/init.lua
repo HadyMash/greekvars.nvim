@@ -2,6 +2,7 @@ local M = {}
 
 -- Greek letter mappings
 M.greek_vars = {
+  -- Lowercase Greek letters
   alpha = "α",
   beta = "β",
   gamma = "γ",
@@ -26,6 +27,31 @@ M.greek_vars = {
   chi = "χ",
   psi = "ψ",
   omega = "ω",
+  -- Uppercase Greek letters
+  ALPHA = "Α",
+  BETA = "Β",
+  GAMMA = "Γ",
+  DELTA = "Δ",
+  EPSILON = "Ε",
+  ZETA = "Ζ",
+  ETA = "Η",
+  THETA = "Θ",
+  IOTA = "Ι",
+  KAPPA = "Κ",
+  LAMBDA = "Λ",
+  MU = "Μ",
+  NU = "Ν",
+  XI = "Ξ",
+  OMICRON = "Ο",
+  PI = "Π",
+  RHO = "Ρ",
+  SIGMA = "Σ",
+  TAU = "Τ",
+  UPSILON = "Υ",
+  PHI = "Φ",
+  CHI = "Χ",
+  PSI = "Ψ",
+  OMEGA = "Ω",
 }
 
 -- Default configuration
@@ -33,6 +59,8 @@ M.config = {
   conceallevel = 2,
   concealcursor = "nc",
   filetypes = { "lua", "python", "javascript", "typescript", "c", "cpp" },
+  case_sensitive = true,    -- Whether matching is case sensitive
+  case_preference = "lower", -- When case_sensitive is false, prefer "lower" or "upper" case symbols
 }
 
 -- Namespace for extmarks
@@ -45,11 +73,61 @@ local function apply_conceal_to_buffer(bufnr)
   
   local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
   
-  for lnum, line in ipairs(lines) do
+  -- Build search patterns based on case sensitivity setting
+  local patterns_to_search = {}
+  
+  if M.config.case_sensitive then
+    -- Case sensitive: use greek_vars as-is
     for name, sym in pairs(M.greek_vars) do
+      table.insert(patterns_to_search, { pattern = name, symbol = sym })
+    end
+  else
+    -- Case insensitive: normalize to lowercase and select symbol based on case_preference
+    local processed = {}
+    for name, sym in pairs(M.greek_vars) do
+      local lower_name = string.lower(name)
+      if not processed[lower_name] then
+        processed[lower_name] = true
+        
+        -- Determine which symbol to use based on preference
+        local preferred_sym = sym
+        if M.config.case_preference == "upper" then
+          -- Try to find uppercase version
+          local upper_name = string.upper(name)
+          if M.greek_vars[upper_name] then
+            preferred_sym = M.greek_vars[upper_name]
+          end
+        else
+          -- Try to find lowercase version (default)
+          if M.greek_vars[lower_name] then
+            preferred_sym = M.greek_vars[lower_name]
+          end
+        end
+        
+        table.insert(patterns_to_search, { pattern = lower_name, symbol = preferred_sym, case_insensitive = true })
+      end
+    end
+  end
+  
+  for lnum, line in ipairs(lines) do
+    for _, pattern_info in ipairs(patterns_to_search) do
+      local name = pattern_info.pattern
+      local sym = pattern_info.symbol
+      local case_insensitive = pattern_info.case_insensitive or false
+      
       local col = 0
       while true do
-        local match_start, match_end = string.find(line, name, col + 1, true)
+        local match_start, match_end
+        
+        if case_insensitive then
+          -- Case insensitive search: convert line to lowercase for matching
+          local line_lower = string.lower(line)
+          match_start, match_end = string.find(line_lower, name, col + 1, true)
+        else
+          -- Case sensitive search
+          match_start, match_end = string.find(line, name, col + 1, true)
+        end
+        
         if not match_start then break end
         
         -- Check word boundaries manually
@@ -122,6 +200,19 @@ function M.setup(opts)
   -- Merge user config with defaults
   if opts then
     M.config = vim.tbl_deep_extend("force", M.config, opts)
+    
+    -- Handle greek_vars customization
+    if opts.greek_vars then
+      -- Merge user-provided greek_vars with defaults
+      M.greek_vars = vim.tbl_deep_extend("force", M.greek_vars, opts.greek_vars)
+      
+      -- Remove entries that user set to false or vim.NIL
+      for key, value in pairs(M.greek_vars) do
+        if value == false or value == vim.NIL then
+          M.greek_vars[key] = nil
+        end
+      end
+    end
   end
 
   -- Disable conceal while searching so highlights show
