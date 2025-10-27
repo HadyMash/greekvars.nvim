@@ -82,7 +82,7 @@ local function apply_conceal_to_buffer(bufnr)
       table.insert(patterns_to_search, { pattern = name, symbol = sym })
     end
   else
-    -- Case insensitive: for each key, check both cases and prefer based on case_preference
+    -- Case insensitive: normalize to lowercase and select symbol based on case_preference
     local processed = {}
     for name, sym in pairs(M.greek_vars) do
       local lower_name = string.lower(name)
